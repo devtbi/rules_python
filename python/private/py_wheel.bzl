@@ -121,6 +121,10 @@ See [`py_wheel_dist`](#py_wheel_dist) for more info.
         doc = "A setting used to determine whether or not the `--stamp` flag is enabled",
         default = Label("//python/private:stamp"),
     ),
+    "force_zip64": attr.bool(
+        default = False,
+        doc = "Force zip64.",
+    ),
 }
 
 _feature_flags = {}
@@ -513,6 +517,8 @@ def _py_wheel_impl(ctx):
             "--data_files",
             filename + ";" + target_files[0].path,
         )
+    if ctx.attr.force_zip64:
+        args.add("--force_zip64")
 
     ctx.actions.run(
         mnemonic = "PyWheel",
